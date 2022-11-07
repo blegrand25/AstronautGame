@@ -39,10 +39,13 @@ public class BasicGameApp implements Runnable {
 
 	public BufferStrategy bufferStrategy;
 	public Image astroPic;
+	public Image alienPic;
 
 	//Declare the objects used in the program
 	//These are things that are made up of more than one variable type
 	private Astronaut astro;
+
+	public Astronaut alien;
 
 	// Main method definition
 	// This is the code that runs first and automatically
@@ -63,6 +66,10 @@ public class BasicGameApp implements Runnable {
 		astroPic = Toolkit.getDefaultToolkit().getImage("astronaut.png"); //load the picture
 		astro = new Astronaut("astro",10,100); //construct the astronaut
 
+		alienPic = Toolkit.getDefaultToolkit().getImage("alien.jpeg");
+		alien = new Astronaut("alien", 800, 70);
+		alien.dy = 0;
+
 	} // end BasicGameApp constructor
 
 
@@ -76,16 +83,18 @@ public class BasicGameApp implements Runnable {
 	public void run() {
 
 		//for the moment we will loop things forever.
-		while (true) {
+		while (true) { // while loop says do this thing until condition is met
 			moveThings();  //move all the game objects
 			render();  // paint the graphics
-			pause(20); // sleep for 10 ms
+			pause(40); // sleep for 10 ms
 		}
 	}
 
 	public void moveThings() {
 		//calls the move( ) code in the objects
 		astro.move();
+		astro.wrap();
+		alien.bounce();
 
 	}
 
@@ -129,10 +138,12 @@ public class BasicGameApp implements Runnable {
 	//Paints things on the screen using bufferStrategy
 	private void render() {
 		Graphics2D g = (Graphics2D) bufferStrategy.getDrawGraphics();
-		g.clearRect(0, 0, WIDTH, HEIGHT);
+		g.clearRect(0, 0, WIDTH, HEIGHT);// clear everything on screen and keeps the onld images
 
 		//draw the image of the astronaut
 		g.drawImage(astroPic, astro.xpos, astro.ypos, astro.width, astro.height, null);
+
+		g.drawImage(alienPic, alien.xpos, alien.ypos, alien.width, alien.height, null);
 
 		g.dispose();
 		bufferStrategy.show();
